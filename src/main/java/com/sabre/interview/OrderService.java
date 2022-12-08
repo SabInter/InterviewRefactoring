@@ -78,7 +78,6 @@ public class OrderService {
     }
 
     private static void updateOrderStatus(Order order) {
-        // Updating order status - RESERVED - 1, FULLY_PAID - 2
         order.setStatus(OrderStatus.RESERVED);
 
         double totalPrice = 0;
@@ -94,7 +93,7 @@ public class OrderService {
         }
 
         if (paidAmount >= totalPrice) {
-            order.setStatus(OrderStatus.PAID);
+            order.setStatus(OrderStatus.FULLY_PAID);
         }
     }
 }

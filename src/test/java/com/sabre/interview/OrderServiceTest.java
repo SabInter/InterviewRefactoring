@@ -68,7 +68,7 @@ class OrderServiceTest {
 
         Order newResult = orderService.addPayment(result.getOrderId(), payment);
 
-        assertThat(newResult.getStatus()).isEqualTo(OrderStatus.PAID);
+        assertThat(newResult.getStatus()).isEqualTo(OrderStatus.FULLY_PAID);
         assertThat(newResult.getOrderItems()).containsAll(List.of(orderItem));
         assertThat(newResult.getPayments()).containsAll(List.of(payment));
     }
