@@ -31,13 +31,11 @@ class OrderServiceTest {
     void orderServiceCreateTest(){
         OrderItem orderItem = new OrderItem();
         orderItem.setPrice(10.12);
-        OrderStatus reserved = new OrderStatus();
-        reserved.setStatusId(1);
 
         Order result = orderService.createOrder(List.of(orderItem));
 
         //TODO: How to test UUID???
-        assertThat(result.getStatus()).isEqualTo(reserved);
+        assertThat(result.getStatus()).isEqualTo(OrderStatus.RESERVED);
         assertThat(result.getOrderItems()).isEqualTo(List.of(orderItem));
     }
 
@@ -45,8 +43,6 @@ class OrderServiceTest {
     void orderServiceAddOrderItem(){
         OrderItem orderItem = new OrderItem();
         orderItem.setPrice(10.12);
-        OrderStatus reserved = new OrderStatus();
-        reserved.setStatusId(1);
 
         Order result = orderService.createOrder(List.of(orderItem));
 
@@ -55,7 +51,7 @@ class OrderServiceTest {
 
         Order newResult = orderService.addOrderItem(result.getOrderId(), newOrderItem);
 
-        assertThat(newResult.getStatus()).isEqualTo(reserved);
+        assertThat(newResult.getStatus()).isEqualTo(OrderStatus.RESERVED);
         assertThat(newResult.getOrderItems()).isEqualTo(List.of(orderItem, newOrderItem));
     }
 
@@ -63,8 +59,6 @@ class OrderServiceTest {
     void orderServiceAddPayment(){
         OrderItem orderItem = new OrderItem();
         orderItem.setPrice(10.12);
-        OrderStatus paidStatus = new OrderStatus();
-        paidStatus.setStatusId(2);
 
         Order result = orderService.createOrder(List.of(orderItem));
 
@@ -74,7 +68,7 @@ class OrderServiceTest {
 
         Order newResult = orderService.addPayment(result.getOrderId(), payment);
 
-        assertThat(newResult.getStatus()).isEqualTo(paidStatus);
+        assertThat(newResult.getStatus()).isEqualTo(OrderStatus.PAID);
         assertThat(newResult.getOrderItems()).containsAll(List.of(orderItem));
         assertThat(newResult.getPayments()).containsAll(List.of(payment));
     }

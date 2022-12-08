@@ -38,7 +38,7 @@ public class OrderService {
         order.getOrderItems().addAll(orderItems);
 
         for (OrderItem orderItem: orderItems){
-            externalReservationSystem.reserveProduct(orderItem.getProduct());
+            externalReservationSystem.reserveProduct(orderItem.getProductItem());
         }
 
         updateOrderStatus(order);
@@ -71,7 +71,6 @@ public class OrderService {
             voucherPaymentSystem.collectPayment(payment);
         }
 
-        // Updating order status - RESERVED - 1, FULLY_PAID - 2
         updateOrderStatus(order);
 
         inMemoryDatabase.insertOrUpdate(order.getOrderId(), order);
@@ -80,9 +79,7 @@ public class OrderService {
 
     private static void updateOrderStatus(Order order) {
         // Updating order status - RESERVED - 1, FULLY_PAID - 2
-        OrderStatus reservedOrder = new OrderStatus();
-        reservedOrder.setStatusId(1);
-        order.setStatus(reservedOrder);
+        order.setStatus(OrderStatus.RESERVED);
 
         double totalPrice = 0;
         for (int i = 0; i < order.getOrderItems().size(); i++) {
@@ -97,9 +94,7 @@ public class OrderService {
         }
 
         if (paidAmount >= totalPrice) {
-            OrderStatus paidOrder = new OrderStatus();
-            paidOrder.setStatusId(2);
-            order.setStatus(paidOrder);
+            order.setStatus(OrderStatus.PAID);
         }
     }
 }
