@@ -42,22 +42,6 @@ class OrderServiceTest {
     }
 
     @Test
-    void orderServiceCreateAndFullyPay(){
-        OrderItem orderItem = new OrderItem();
-        orderItem.setPrice(10.12);
-        Payment payment = new Payment();
-        payment.setPaymentAmount(10.12);
-        OrderStatus paidStatus = new OrderStatus();
-        paidStatus.setStatusId(2);
-
-        Order result = orderService.createOrderWithPayment(List.of(orderItem), payment);
-
-        assertThat(result.getStatus()).isEqualTo(paidStatus);
-        assertThat(result.getOrderItems()).containsAll(List.of(orderItem));
-        assertThat(result.getPayments()).containsAll(List.of(payment));
-    }
-
-    @Test
     void orderServiceAddOrderItem(){
         OrderItem orderItem = new OrderItem();
         orderItem.setPrice(10.12);

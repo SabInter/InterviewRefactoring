@@ -41,37 +41,7 @@ public class OrderService {
             externalReservationSystem.reserveProduct(orderItem.getProduct());
         }
 
-        // Updating order status - RESERVED - 1, FULLY_PAID - 2
-        OrderStatus reservedOrder = new OrderStatus();
-        reservedOrder.setStatusId(1);
-        order.setStatus(reservedOrder);
-
-        inMemoryDatabase.insertOrUpdate(order.getOrderId(), order);
-        return order;
-    }
-
-    public Order createOrderWithPayment(List<OrderItem> orderItems, Payment payment) {
-        Order order = new Order();
-        order.setOrderId(UUID.randomUUID().toString());
-        order.getOrderItems().addAll(orderItems);
-        order.getPayments().add(payment);
-
-        // Updating order status - RESERVED - 1, FULLY_PAID - 2
-        OrderStatus reservedOrder = new OrderStatus();
-        reservedOrder.setStatusId(1);
-        order.setStatus(reservedOrder);
-
-        double totalPrice = 0;
-        for (int i = 0; i < order.getOrderItems().size(); i++) {
-            double tmpPrice = order.getOrderItems().get(i).getPrice();
-            totalPrice += tmpPrice;
-        }
-
-        if (payment.getPaymentAmount() >= totalPrice) {
-            OrderStatus paidOrder = new OrderStatus();
-            paidOrder.setStatusId(2);
-            order.setStatus(paidOrder);
-        }
+        updateOrderStatus(order);
 
         inMemoryDatabase.insertOrUpdate(order.getOrderId(), order);
         return order;
@@ -83,28 +53,7 @@ public class OrderService {
         orderItems.add(orderItem);
         order.setOrderItems(orderItems);
 
-        // Updating order status - RESERVED - 1, FULLY_PAID - 2
-        OrderStatus reservedOrder = new OrderStatus();
-        reservedOrder.setStatusId(1);
-        order.setStatus(reservedOrder);
-
-        double totalPrice = 0;
-        for (int i = 0; i < order.getOrderItems().size(); i++) {
-            double tmpPrice = order.getOrderItems().get(i).getPrice();
-            totalPrice += tmpPrice;
-        }
-
-        double paidAmount = 0;
-        for (int i = 0; i < order.getPayments().size(); i++) {
-            double tmpPrice = order.getPayments().get(i).getPaymentAmount();
-            paidAmount += tmpPrice;
-        }
-
-        if (paidAmount >= totalPrice) {
-            OrderStatus paidOrder = new OrderStatus();
-            paidOrder.setStatusId(2);
-            order.setStatus(paidOrder);
-        }
+        updateOrderStatus(order);
 
         inMemoryDatabase.insertOrUpdate(order.getOrderId(), order);
         return order;
@@ -123,6 +72,14 @@ public class OrderService {
         }
 
         // Updating order status - RESERVED - 1, FULLY_PAID - 2
+        updateOrderStatus(order);
+
+        inMemoryDatabase.insertOrUpdate(order.getOrderId(), order);
+        return order;
+    }
+
+    private static void updateOrderStatus(Order order) {
+        // Updating order status - RESERVED - 1, FULLY_PAID - 2
         OrderStatus reservedOrder = new OrderStatus();
         reservedOrder.setStatusId(1);
         order.setStatus(reservedOrder);
@@ -144,8 +101,5 @@ public class OrderService {
             paidOrder.setStatusId(2);
             order.setStatus(paidOrder);
         }
-
-        inMemoryDatabase.insertOrUpdate(order.getOrderId(), order);
-        return order;
     }
 }
