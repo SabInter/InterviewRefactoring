@@ -11,7 +11,7 @@ import com.sabre.interview.model.Payment;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
+import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,11 +20,7 @@ class OrderServiceTest {
 
     @BeforeEach
     public void setUp(){
-        orderService = new OrderService();
-        orderService.setInMemoryDatabase(new InMemoryDatabase());
-        orderService.setExternalReservationSystem(new ExternalReservationSystem());
-        orderService.setCreditCardExternalPaymentSystem(new CreditCardExternalPaymentSystem());
-        orderService.setVoucherPaymentSystem(new VoucherPaymentSystem());
+        orderService = new OrderService(new ExternalReservationSystem(), new InMemoryDatabase(), new CreditCardExternalPaymentSystem(), new VoucherPaymentSystem());
     }
 
     @Test
@@ -32,11 +28,11 @@ class OrderServiceTest {
         OrderItem orderItem = new OrderItem();
         orderItem.setPrice(10.12);
 
-        Order result = orderService.createOrder(List.of(orderItem));
+        Order result = orderService.createOrder(Arrays.asList(orderItem));
 
         //TODO: How to test UUID???
         assertThat(result.getStatus()).isEqualTo(OrderStatus.RESERVED);
-        assertThat(result.getOrderItems()).isEqualTo(List.of(orderItem));
+        assertThat(result.getOrderItems()).isEqualTo(Arrays.asList(orderItem));
     }
 
     @Test
@@ -44,7 +40,7 @@ class OrderServiceTest {
         OrderItem orderItem = new OrderItem();
         orderItem.setPrice(10.12);
 
-        Order result = orderService.createOrder(List.of(orderItem));
+        Order result = orderService.createOrder(Arrays.asList(orderItem));
 
         OrderItem newOrderItem = new OrderItem();
         orderItem.setPrice(10.00);
@@ -52,7 +48,7 @@ class OrderServiceTest {
         Order newResult = orderService.addOrderItem(result.getOrderId(), newOrderItem);
 
         assertThat(newResult.getStatus()).isEqualTo(OrderStatus.RESERVED);
-        assertThat(newResult.getOrderItems()).isEqualTo(List.of(orderItem, newOrderItem));
+        assertThat(newResult.getOrderItems()).isEqualTo(Arrays.asList(orderItem, newOrderItem));
     }
 
     @Test
@@ -60,7 +56,7 @@ class OrderServiceTest {
         OrderItem orderItem = new OrderItem();
         orderItem.setPrice(10.12);
 
-        Order result = orderService.createOrder(List.of(orderItem));
+        Order result = orderService.createOrder(Arrays.asList(orderItem));
 
         Payment payment = new Payment();
         payment.setPaymentMethod("CREDIT");
@@ -69,7 +65,7 @@ class OrderServiceTest {
         Order newResult = orderService.addPayment(result.getOrderId(), payment);
 
         assertThat(newResult.getStatus()).isEqualTo(OrderStatus.FULLY_PAID);
-        assertThat(newResult.getOrderItems()).containsAll(List.of(orderItem));
-        assertThat(newResult.getPayments()).containsAll(List.of(payment));
+        assertThat(newResult.getOrderItems()).containsAll(Arrays.asList(orderItem));
+        assertThat(newResult.getPayments()).containsAll(Arrays.asList(payment));
     }
 }

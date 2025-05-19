@@ -11,24 +11,15 @@ import java.util.UUID;
 
 public class OrderService {
 
-    private ExternalReservationSystem externalReservationSystem;
-    private InMemoryDatabase inMemoryDatabase;
-    private CreditCardExternalPaymentSystem creditCardExternalPaymentSystem;
-    private VoucherPaymentSystem voucherPaymentSystem;
+    private final ExternalReservationSystem externalReservationSystem;
+    private final InMemoryDatabase inMemoryDatabase;
+    private final CreditCardExternalPaymentSystem creditCardExternalPaymentSystem;
+    private final VoucherPaymentSystem voucherPaymentSystem;
 
-    public void setExternalReservationSystem(ExternalReservationSystem externalReservationSystem) {
+    public OrderService(ExternalReservationSystem externalReservationSystem, InMemoryDatabase inMemoryDatabase, CreditCardExternalPaymentSystem creditCardExternalPaymentSystem, VoucherPaymentSystem voucherPaymentSystem) {
         this.externalReservationSystem = externalReservationSystem;
-    }
-
-    public void setInMemoryDatabase(InMemoryDatabase inMemoryDatabase) {
         this.inMemoryDatabase = inMemoryDatabase;
-    }
-
-    public void setCreditCardExternalPaymentSystem(CreditCardExternalPaymentSystem creditCardExternalPaymentSystem) {
         this.creditCardExternalPaymentSystem = creditCardExternalPaymentSystem;
-    }
-
-    public void setVoucherPaymentSystem(VoucherPaymentSystem voucherPaymentSystem) {
         this.voucherPaymentSystem = voucherPaymentSystem;
     }
 
@@ -77,6 +68,11 @@ public class OrderService {
         return order;
     }
 
+    /**
+     * If sum of payments is equal or exceeds sum of prices of
+     * all order items set order status to FULLY_PAID
+     * Otherwise set it to RESERVED
+     */
     private static void updateOrderStatus(Order order) {
         order.setStatus(OrderStatus.RESERVED);
 
