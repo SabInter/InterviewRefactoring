@@ -1,16 +1,18 @@
 package com.sabre.interview.model;
 
+import org.javamoney.moneta.Money;
+
 import java.util.Objects;
 
 public class OrderItem {
-    private double price;
+    private Money price;
     private ProductItem productItem;
 
-    public double getPrice() {
+    public Money getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(Money price) {
         this.price = price;
     }
 
@@ -26,7 +28,7 @@ public class OrderItem {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         OrderItem orderItem = (OrderItem) o;
-        return Double.compare(price, orderItem.price) == 0 && Objects.equals(productItem, orderItem.productItem);
+        return Objects.equals(price, orderItem.price) && Objects.equals(productItem, orderItem.productItem);
     }
 
     @Override

@@ -1,10 +1,12 @@
 package com.sabre.interview.model;
 
+import org.javamoney.moneta.Money;
+
 import java.util.Objects;
 
 public class Payment {
     String paymentMethod;
-    double paymentAmount;
+    Money paymentAmount;
 
     public String getPaymentMethod() {
         return paymentMethod;
@@ -14,11 +16,11 @@ public class Payment {
         this.paymentMethod = paymentMethod;
     }
 
-    public double getPaymentAmount() {
+    public Money getPaymentAmount() {
         return paymentAmount;
     }
 
-    public void setPaymentAmount(double paymentAmount) {
+    public void setPaymentAmount(Money paymentAmount) {
         this.paymentAmount = paymentAmount;
     }
 
@@ -26,7 +28,7 @@ public class Payment {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Payment payment = (Payment) o;
-        return Double.compare(paymentAmount, payment.paymentAmount) == 0 && Objects.equals(paymentMethod, payment.paymentMethod);
+        return Objects.equals(paymentMethod, payment.paymentMethod) && Objects.equals(paymentAmount, payment.paymentAmount);
     }
 
     @Override

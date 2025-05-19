@@ -8,9 +8,11 @@ import com.sabre.interview.model.Order;
 import com.sabre.interview.model.OrderItem;
 import com.sabre.interview.model.OrderStatus;
 import com.sabre.interview.model.Payment;
+import org.javamoney.moneta.Money;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import javax.money.Monetary;
 import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -26,7 +28,7 @@ class OrderServiceTest {
     @Test
     void orderServiceCreateTest(){
         OrderItem orderItem = new OrderItem();
-        orderItem.setPrice(10.12);
+        orderItem.setPrice(Money.of(10.12, Monetary.getCurrency("USD")));
 
         Order result = orderService.createOrder(Arrays.asList(orderItem));
 
@@ -38,12 +40,12 @@ class OrderServiceTest {
     @Test
     void orderServiceAddOrderItem(){
         OrderItem orderItem = new OrderItem();
-        orderItem.setPrice(10.12);
+        orderItem.setPrice(Money.of(10.12, Monetary.getCurrency("USD")));
 
         Order result = orderService.createOrder(Arrays.asList(orderItem));
 
         OrderItem newOrderItem = new OrderItem();
-        orderItem.setPrice(10.00);
+        newOrderItem.setPrice(Money.of(10.00, Monetary.getCurrency("USD")));
 
         Order newResult = orderService.addOrderItem(result.getOrderId(), newOrderItem);
 
@@ -54,13 +56,13 @@ class OrderServiceTest {
     @Test
     void orderServiceAddPayment(){
         OrderItem orderItem = new OrderItem();
-        orderItem.setPrice(10.12);
+        orderItem.setPrice(Money.of(10.12, Monetary.getCurrency("USD")));
 
         Order result = orderService.createOrder(Arrays.asList(orderItem));
 
         Payment payment = new Payment();
         payment.setPaymentMethod("CREDIT");
-        payment.setPaymentAmount(10.12);
+        payment.setPaymentAmount(Money.of(10.12, Monetary.getCurrency("USD")));
 
         Order newResult = orderService.addPayment(result.getOrderId(), payment);
 

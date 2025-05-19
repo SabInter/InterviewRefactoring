@@ -5,7 +5,10 @@ import com.sabre.interview.infrastructure.VoucherPaymentSystem;
 import com.sabre.interview.infrastructure.ExternalReservationSystem;
 import com.sabre.interview.infrastructure.InMemoryDatabase;
 import com.sabre.interview.model.*;
+import org.javamoney.moneta.Money;
 
+import javax.money.Monetary;
+import javax.money.NumberValue;
 import java.util.List;
 import java.util.UUID;
 
@@ -76,19 +79,21 @@ public class OrderService {
     private static void updateOrderStatus(Order order) {
         order.setStatus(OrderStatus.RESERVED);
 
-        double totalPrice = 0;
+        // Calculate the sum of order item prices
+        Money totalPrice = Money.of(0, Monetary.getCurrency("USD"));
         for (int i = 0; i < order.getOrderItems().size(); i++) {
-            double tmpPrice = order.getOrderItems().get(i).getPrice();
-            totalPrice += tmpPrice;
+            Money tmpPrice = order.getOrderItems().get(i).getPrice();
+            totalPrice = totalPrice.add(tmpPrice);
         }
 
-        double paidAmount = 0;
+        // Calculate the sum of payment amounts
+        Money paidAmount = Money.of(0, Monetary.getCurrency("USD"));
         for (int i = 0; i < order.getPayments().size(); i++) {
-            double tmpPrice = order.getPayments().get(i).getPaymentAmount();
-            paidAmount += tmpPrice;
+            Money tmpPrice = order.getPayments().get(i).getPaymentAmount();
+            paidAmount = paidAmount.add(tmpPrice);
         }
 
-        if (paidAmount >= totalPrice) {
+        if (paidAmount.isGreaterThanOrEqualTo(totalPrice)) {
             order.setStatus(OrderStatus.FULLY_PAID);
         }
     }
